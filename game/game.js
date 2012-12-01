@@ -11,7 +11,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   var output = document.getElementById('output');
 
   var rm = new ResourceManager();
-  var backImg = rm.loadImage('game/images/background.png');
+  var backImg = rm.loadImage('images/bg.png');
   var nyanImg = rm.loadImage('game/images/nyan.png');
   var yarnImg = rm.loadImage('game/images/yarn.png');
   var yipee = rm.loadSound('game/sounds/yipee.wav');
