@@ -30,11 +30,12 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   var nyan, moon, pyramid, ground, ceiling, leftWall, rightWall, yarn;
 
   //set the sprite animation to use 8 frames, 100 millis/frame, spritesheet, 96x96 pixels
+  //var sprite = new Animation().createFromTile(8,100,spriteImg,36,60);
   var sprite = new Animation().createFromTile(8,100,spriteImg,96,96);
   var testSprite;
   
   // create our box2d instance
-  box = new Box({intervalRate:60, adaptive:false, width:gameW, height:gameH, scale:SCALE, gravityY:9.8});
+  box = new Box({intervalRate:60, adaptive:false, width:gameW, height:gameH, scale:SCALE, gravityY:0.0});
   
 
   //create each of the shapes in the world
@@ -43,7 +44,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     x: 385 / SCALE,
     y: 480 / SCALE,
     halfWidth: 1000 / SCALE,
-    halfHeight: 40 / SCALE,
+    halfHeight: 1 / SCALE,
     staticBody: true
   });
   box.addBody(ground); //add the shape to the box
@@ -52,9 +53,9 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   celing = new Rectangle({
     id: geomId,
     x: 385 / SCALE,
-    y: -200 / SCALE,
+    y: -1 / SCALE,
     halfWidth: 1000 / SCALE,
-    halfHeight: 40 / SCALE,
+    halfHeight: 1 / SCALE,
     staticBody: true
   });
   box.addBody(celing);
@@ -62,9 +63,9 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 
   leftWall = new Rectangle({
     id: geomId,
-    x: -80 / SCALE,
+    x: -1 / SCALE,
     y: 240 / SCALE,
-    halfWidth: 40 / SCALE,
+    halfWidth: 1 / SCALE,
     halfHeight: 1000 / SCALE,
     staticBody: true
   });
@@ -73,9 +74,9 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 
   rightWall = new Rectangle({
     id: geomId,
-    x: 850 / SCALE,
+    x: 771 / SCALE,
     y: 240 / SCALE,
-    halfWidth: 40 / SCALE,
+    halfWidth: 1 / SCALE,
     halfHeight: 1000 / SCALE,
     staticBody: true
   });
@@ -105,29 +106,22 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   geomId++;
   nyan = new Rectangle({
     id: geomId,
-    x: 116 / SCALE,
-    y: 360 / SCALE,
-    halfWidth: 40 / SCALE,
-    halfHeight: 28 / SCALE,
+    x: 96 / SCALE,
+    y: 96 / SCALE,
+    halfWidth: 26 / SCALE,
+    halfHeight: 36 / SCALE,
     staticBody: false,
-/*    draw: function(ctx, scale){ // we want to render the nyan cat with an image
-      ctx.save();
-      ctx.translate(this.x * scale, this.y * scale);
-      //ctx.rotate(this.angle); // this angle was given to us by box2d's calculations
-      ctx.translate(-(this.x) * scale, -(this.y) * scale);
-      ctx.fillStyle = this.color;
-      ctx.drawImage(
-        nyanImg,
-        (this.x-this.halfWidth) * scale - 10, //lets offset it a little to the left
-        (this.y-this.halfHeight) * scale
-      );
-      ctx.restore();
-    } */
     draw: function(ctx, scale){ // we want to render the nyan cat with an image
-      //ctx.save();
       var cf = sprite.getCurrentFrame();
-      ctx.drawImage(sprite.image, cf.imgSlotX * sprite.width, cf.imgSlotY * sprite.height, sprite.width, sprite.height, (this.x-this.halfWidth) * scale - 10,(this.y-this.halfHeight) * scale, sprite.width, sprite.height);
-      //ctx.restore();
+      ctx.drawImage(sprite.image, 
+					cf.imgSlotX * sprite.width, 
+					cf.imgSlotY * sprite.height, 
+					sprite.width, 
+					sprite.height, 
+					(this.x-this.halfWidth) * scale,
+					(this.y-this.halfHeight) * scale, 
+					sprite.width, 
+					sprite.height);
     }
   });
   box.addBody(nyan);
@@ -168,6 +162,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
       im.addKeyAction(keys.LEFT_ARROW);
       im.addKeyAction(keys.RIGHT_ARROW);
       im.addKeyAction(keys.UP_ARROW);
+	  im.addKeyAction(keys.DOWN_ARROW);
 
       //the extra param says to only detect inital press
       im.addKeyAction(keys.SPACE, true);
@@ -183,6 +178,10 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 
       if(im.keyActions[keys.UP_ARROW].isPressed()){
         box.applyImpulse(nyan.id, 270, speed);
+      }
+
+      if(im.keyActions[keys.DOWN_ARROW].isPressed()){
+        box.applyImpulse(nyan.id, 90, speed);
       }
 
       //.play sounds with the space bar !
