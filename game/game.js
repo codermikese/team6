@@ -1,6 +1,6 @@
 //load the AMD modules we need
-require(['frozen/GameCore', 'frozen/ResourceManager', 'dojo/keys', 'frozen/box2d/Box', 'frozen/box2d/RectangleEntity', 'frozen/box2d/PolygonEntity', 'frozen/box2d/CircleEntity'],
- function(GameCore, ResourceManager, keys, Box, Rectangle, Polygon, Circle){
+require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/Animation', 'dojo/keys', 'frozen/box2d/Box', 'frozen/box2d/RectangleEntity', 'frozen/box2d/PolygonEntity', 'frozen/box2d/CircleEntity'],
+ function(GameCore, ResourceManager, Sprite, Animation, keys, Box, Rectangle, Polygon, Circle){
 
   //dimensions same as canvas.
   var gameH = 480;
@@ -15,6 +15,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'dojo/keys', 'frozen/box2d
   var nyanImg = rm.loadImage('game/images/nyan.png');
   var yarnImg = rm.loadImage('game/images/yarn.png');
   var yipee = rm.loadSound('game/sounds/yipee.wav');
+  var spriteImg = rm.loadImage('game/images/walking.png');
 
   var box;
   var world = {};
@@ -28,8 +29,10 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'dojo/keys', 'frozen/box2d
   //shapes in the box2 world, locations are their centers
   var nyan, moon, pyramid, ground, ceiling, leftWall, rightWall, yarn;
 
-
-
+  //set the sprite animation to use 8 frames, 100 millis/frame, spritesheet, 96x96 pixels
+  var sprite = new Animation().createFromTile(8,100,spriteImg,96,96);
+  var testSprite;
+  
   // create our box2d instance
   box = new Box({intervalRate:60, adaptive:false, width:gameW, height:gameH, scale:SCALE, gravityY:9.8});
   
@@ -107,10 +110,10 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'dojo/keys', 'frozen/box2d
     halfWidth: 40 / SCALE,
     halfHeight: 28 / SCALE,
     staticBody: false,
-    draw: function(ctx, scale){ // we want to render the nyan cat with an image
+/*    draw: function(ctx, scale){ // we want to render the nyan cat with an image
       ctx.save();
       ctx.translate(this.x * scale, this.y * scale);
-      ctx.rotate(this.angle); // this angle was given to us by box2d's calculations
+      //ctx.rotate(this.angle); // this angle was given to us by box2d's calculations
       ctx.translate(-(this.x) * scale, -(this.y) * scale);
       ctx.fillStyle = this.color;
       ctx.drawImage(
@@ -119,6 +122,12 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'dojo/keys', 'frozen/box2d
         (this.y-this.halfHeight) * scale
       );
       ctx.restore();
+    } */
+    draw: function(ctx, scale){ // we want to render the nyan cat with an image
+      //ctx.save();
+      var cf = sprite.getCurrentFrame();
+      ctx.drawImage(sprite.image, cf.imgSlotX * sprite.width, cf.imgSlotY * sprite.height, sprite.width, sprite.height, (this.x-this.halfWidth) * scale - 10,(this.y-this.halfHeight) * scale, sprite.width, sprite.height);
+      //ctx.restore();
     }
   });
   box.addBody(nyan);
@@ -149,9 +158,6 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'dojo/keys', 'frozen/box2d
   });
   box.addBody(yarn);
   world[geomId] = yarn;
-
-
-
 
   //setup a GameCore instance
   var game = new GameCore({
@@ -202,6 +208,8 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'dojo/keys', 'frozen/box2d
           entity.update(bodiesState[id]);
         }
       }
+
+	  sprite.update(millis);
 
     },
     draw: function(context){
