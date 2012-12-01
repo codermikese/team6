@@ -36,7 +36,8 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   
   // create our box2d instance
   box = new Box({intervalRate:60, adaptive:false, width:gameW, height:gameH, scale:SCALE, gravityY:0.0});
-  
+
+  var lastOw = 0;
 
   //create each of the shapes in the world
   ground = new Rectangle({
@@ -82,26 +83,6 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   });
   box.addBody(rightWall);
   world[geomId] = rightWall;
-
-  geomId++;
-  moon = new Circle({
-    id: geomId,
-    x: 626 / SCALE,
-    y: 120 / SCALE,
-    radius: 63 / SCALE,
-    staticBody: true
-  });
-  box.addBody(moon);
-  world[geomId] = moon;
-
-  geomId++;
-  pyramid = new Polygon({
-    id: geomId,
-    points: [{x: 320 / SCALE, y: 440 / SCALE}, {x: 446 / SCALE, y: 290 / SCALE}, {x: 565 / SCALE, y: 440 / SCALE}],
-    staticBody: true
-  });
-  box.addBody(pyramid);
-  world[geomId] = pyramid;
 
   geomId++;
   nyan = new Circle({ //Rectangle({
@@ -211,6 +192,15 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
         }
       }
 
+	  if(distance(nyan,yarn) < nyan.radius + yarn.radius)
+	  {
+//		if(lastOw == 0 || millis > lastOw + 500)
+//		{
+			lastOw = millis;
+			rm.playSound(yipee);
+//		}
+	  }
+	  
 	  sprite.update(millis);
 
     },
@@ -224,6 +214,13 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     }
   });
 
+  function distance(obj1, obj2)
+  {
+	var x2 = (obj1.x - obj2.x) * (obj1.x - obj2.x);
+	var y2 = (obj1.y - obj2.y) * (obj1.y - obj2.y);
+	
+	return (Math.sqrt(x2 + y2));
+  }
   
   //if you want to take a look at the game object in dev tools
   console.log(game);
