@@ -104,12 +104,13 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   world[geomId] = pyramid;
 
   geomId++;
-  nyan = new Rectangle({
+  nyan = new Circle({ //Rectangle({
     id: geomId,
     x: 96 / SCALE,
     y: 96 / SCALE,
-    halfWidth: 26 / SCALE,
-    halfHeight: 36 / SCALE,
+    radius: 30 / SCALE,
+//    halfWidth: 26 / SCALE,
+//    halfHeight: 36 / SCALE,
     staticBody: false,
     draw: function(ctx, scale){ // we want to render the nyan cat with an image
       var cf = sprite.getCurrentFrame();
@@ -118,8 +119,10 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 					cf.imgSlotY * sprite.height, 
 					sprite.width, 
 					sprite.height, 
-					(this.x-this.halfWidth) * scale,
-					(this.y-this.halfHeight) * scale, 
+//					(this.x-this.halfWidth) * scale,
+//					(this.y-this.halfHeight) * scale, 
+					(this.x-this.radius) * scale,
+					(this.y-this.radius) * scale, 
 					sprite.width, 
 					sprite.height);
     }
@@ -152,7 +155,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   });
   box.addBody(yarn);
   world[geomId] = yarn;
-
+  
   //setup a GameCore instance
   var game = new GameCore({
     canvasId: 'canvas',
@@ -221,6 +224,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     }
   });
 
+  
   //if you want to take a look at the game object in dev tools
   console.log(game);
 
