@@ -282,7 +282,11 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 	  if(!started)
 	  {
 		box.applyImpulse(yarn.id, Math.random() * 360, Math.random() * 20);
-		started = true;
+		box.applyImpulse(yarn2.id, Math.random() * 360, Math.random() * 20);
+    box.applyImpulse(yarn3.id, Math.random() * 360, Math.random() * 20);
+    box.applyImpulse(yarn4.id, Math.random() * 360, Math.random() * 20);
+    started = true;
+    
 	  }
 	  
       //when creating geometry, you may want to use the to determine where you are on the canvas
