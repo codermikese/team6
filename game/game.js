@@ -12,7 +12,6 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 
   var rm = new ResourceManager();
   var backImg = rm.loadImage('images/bg.png');
-  var yarnImg = rm.loadImage('game/images/yarn.png');
   var gunfireSound = rm.loadSound('Sounds/gunfire.mp3');
   var childHitSound = rm.loadSound('Sounds/childhit.mp3');
   var punisherHitSound = rm.loadSound('Sounds/punisherhit.mp3');
@@ -24,6 +23,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   //var ShootLeftImg = rm.loadImage();
   //var ShootRightImg = rm.loadImage();
   var babyImg = rm.loadImage('images/babymonster.png');
+  var bulletImg = rm.loadImage('images/bullet.png');
   
   var box;
   var world = {};
@@ -37,10 +37,14 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   //shapes in the box2 world, locations are their centers
   var nyan, moon, pyramid, ground, ceiling, leftWall, rightWall, yarn;
 
-  //set the sprite animation to use 8 frames, 100 millis/frame, spritesheet, 96x96 pixels
   var sprite = new Animation().createFromTile(4,100,spriteImg,60,60);
-  //var sprite = new Animation().createFromTile(8,100,spriteImg,96,96);
-  var testSprite;
+
+  var baby = new Animation().createFromTile(4,100,babyImg,36,48);
+
+  var bulletSpeed = 20;
+  var bullet;
+  
+  var started = false;
   
   // create our box2d instance
   box = new Box({intervalRate:60, adaptive:false, width:gameW, height:gameH, scale:SCALE, gravityY:0.0});
@@ -123,20 +127,38 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     density: 0.5,  // al little lighter
     restitution: 0.8, // a little bouncier
     draw: function(ctx, scale){  //we also want to render the yarn with an image
-      ctx.drawImage(sprite.image, 
-					cf.imgSlotX * sprite.width, 
-					cf.imgSlotY * sprite.height, 
-					sprite.width, 
-					sprite.height, 
+      var cf = baby.getCurrentFrame();
+      ctx.drawImage(baby.image, 
+					cf.imgSlotX * baby.width, 
+					cf.imgSlotY * baby.height, 
+					baby.width, 
+					baby.height, 
 					(this.x-this.radius) * scale,
 					(this.y-this.radius) * scale, 
-					sprite.width, 
-					sprite.height);
-      );
+					baby.width, 
+					baby.height);
     }
   });
   box.addBody(yarn);
   world[geomId] = yarn;
+  
+  geomId++;
+  bullet = new Circle({
+    id: geomId,
+    x: 116 / SCALE,
+    y: 360 / SCALE,
+    radius: 3 / SCALE,
+    staticBody: false,
+    draw: function(ctx, scale){ // we want to render the nyan cat with an image
+      ctx.drawImage(
+        bulletImg,
+        (this.x-this.halfWidth) * scale,
+        (this.y-this.halfHeight) * scale
+      );
+    }
+  });
+  box.addBody(bullet);
+  world[geomId] = bullet;
   
   //setup a GameCore instance
   var game = new GameCore({
@@ -171,9 +193,18 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 
       //.play sounds with the space bar !
       if(im.keyActions[keys.SPACE].getAmount()){
+		bullet.x = nyan.x;
+		bullet.y = nyan.y;
+		box.applyImpulse(bullet.id, 0, bulletSpeed);
         rm.playSound(gunfireSound);
       }
 
+	  if(!started)
+	  {
+		box.applyImpulse(yarn.id, Math.random() * 360, Math.random() * 20);
+		started = true;
+	  }
+	  
       //when creating geometry, you may want to use the to determine where you are on the canvas
       //if(im.mouseAction.position){
         //output.innerHTML = 'x: ' + im.mouseAction.position.x + ' y: ' + im.mouseAction.position.y;
@@ -200,7 +231,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 	  }
 	  
 	  sprite.update(millis);
-
+	  baby.update(millis);
     },
     draw: function(context){
       context.drawImage(backImg, 0, 0, this.width, this.height);
