@@ -12,11 +12,19 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 
   var rm = new ResourceManager();
   var backImg = rm.loadImage('images/bg.png');
-  var nyanImg = rm.loadImage('game/images/nyan.png');
   var yarnImg = rm.loadImage('game/images/yarn.png');
-  var yipee = rm.loadSound('game/sounds/yipee.wav');
-  var spriteImg = rm.loadImage('game/images/walking.png');
-
+  var gunfireSound = rm.loadSound('Sounds/gunfire.mp3');
+  var childHitSound = rm.loadSound('Sounds/childhit.mp3');
+  var punisherHitSound = rm.loadSound('Sounds/punisherhit.mp3');
+  var spriteImg = rm.loadImage('images/walking.png');
+  //var walkingDownImg = rm.loadImage();
+  //var walkingUpImg = rm.loadImage();
+  //var walkingLeftImg = rm.loadImage();
+  //var walkingRightImg = rm.loadImage();
+  //var ShootLeftImg = rm.loadImage();
+  //var ShootRightImg = rm.loadImage();
+  var babyImg = rm.loadImage('images/babymonster.png');
+  
   var box;
   var world = {};
 
@@ -30,14 +38,12 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   var nyan, moon, pyramid, ground, ceiling, leftWall, rightWall, yarn;
 
   //set the sprite animation to use 8 frames, 100 millis/frame, spritesheet, 96x96 pixels
-  //var sprite = new Animation().createFromTile(8,100,spriteImg,36,60);
-  var sprite = new Animation().createFromTile(8,100,spriteImg,96,96);
+  var sprite = new Animation().createFromTile(4,100,spriteImg,60,60);
+  //var sprite = new Animation().createFromTile(8,100,spriteImg,96,96);
   var testSprite;
   
   // create our box2d instance
   box = new Box({intervalRate:60, adaptive:false, width:gameW, height:gameH, scale:SCALE, gravityY:0.0});
-
-  var lastOw = 0;
 
   //create each of the shapes in the world
   ground = new Rectangle({
@@ -90,8 +96,6 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     x: 96 / SCALE,
     y: 96 / SCALE,
     radius: 30 / SCALE,
-//    halfWidth: 26 / SCALE,
-//    halfHeight: 36 / SCALE,
     staticBody: false,
     draw: function(ctx, scale){ // we want to render the nyan cat with an image
       var cf = sprite.getCurrentFrame();
@@ -100,8 +104,6 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 					cf.imgSlotY * sprite.height, 
 					sprite.width, 
 					sprite.height, 
-//					(this.x-this.halfWidth) * scale,
-//					(this.y-this.halfHeight) * scale, 
 					(this.x-this.radius) * scale,
 					(this.y-this.radius) * scale, 
 					sprite.width, 
@@ -121,17 +123,16 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     density: 0.5,  // al little lighter
     restitution: 0.8, // a little bouncier
     draw: function(ctx, scale){  //we also want to render the yarn with an image
-      ctx.save();
-      ctx.translate(this.x * scale, this.y * scale);
-      ctx.rotate(this.angle);
-      ctx.translate(-(this.x) * scale, -(this.y) * scale);
-      ctx.fillStyle = this.color;
-      ctx.drawImage(
-        yarnImg,
-        (this.x-this.radius) * scale,
-        (this.y-this.radius) * scale
+      ctx.drawImage(sprite.image, 
+					cf.imgSlotX * sprite.width, 
+					cf.imgSlotY * sprite.height, 
+					sprite.width, 
+					sprite.height, 
+					(this.x-this.radius) * scale,
+					(this.y-this.radius) * scale, 
+					sprite.width, 
+					sprite.height);
       );
-      ctx.restore();
     }
   });
   box.addBody(yarn);
@@ -170,7 +171,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 
       //.play sounds with the space bar !
       if(im.keyActions[keys.SPACE].getAmount()){
-        rm.playSound(yipee);
+        rm.playSound(gunfireSound);
       }
 
       //when creating geometry, you may want to use the to determine where you are on the canvas
@@ -194,11 +195,8 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 
 	  if(distance(nyan,yarn) < nyan.radius + yarn.radius)
 	  {
-//		if(lastOw == 0 || millis > lastOw + 500)
-//		{
-			lastOw = millis;
-			rm.playSound(yipee);
-//		}
+		lastOw = millis;
+		rm.playSound(punisherHitSound);
 	  }
 	  
 	  sprite.update(millis);
