@@ -11,25 +11,25 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   var output = document.getElementById('output');
 
   var rm = new ResourceManager();
-  var backImg = rm.loadImage('images/bg.png');
+  var backImg = rm.loadImage('Images/bg.png');
   var gunfireSound = rm.loadSound('Sounds/gunfire.mp3');
   var childHitSound = rm.loadSound('Sounds/childhit.mp3');
   var punisherHitSound = rm.loadSound('Sounds/punisherhit.mp3');
   var childHitSound = rm.loadSound('Sounds/childhit.mp3');
-  var spriteImg = rm.loadImage('images/walking.png');
+  var spriteImg = rm.loadImage('Images/walking.png');
   //var walkingDownImg = rm.loadImage();
   //var walkingUpImg = rm.loadImage();
   //var walkingLeftImg = rm.loadImage();
   //var walkingRightImg = rm.loadImage();
   //var ShootLeftImg = rm.loadImage();
   //var ShootRightImg = rm.loadImage();
-  var babyImg = rm.loadImage('images/babymonster.png');
-  var bulletImg = rm.loadImage('images/bullet.png');
-  var kidImg = rm.loadImage('images/kid-walking-right.png');
-  var hurtImg = rm.loadImage('images/wounded-baby.png');
-  var hurtImg2 = rm.loadImage('images/wounded-baby.png');
-  var hurtImg3 = rm.loadImage('images/wounded-baby.png');
-  var hurtpunisherImg = rm.loadImage('images/hurtpunisher.png');
+  var babyImg = rm.loadImage('Images/babymonster.png');
+  var bulletImg = rm.loadImage('Images/bullet.png');
+  var kidImg = rm.loadImage('Images/kid-walking-right.png');
+  var hurtImg = rm.loadImage('Images/wounded-baby.png');
+  var hurtImg2 = rm.loadImage('Images/wounded-baby.png');
+  var hurtImg3 = rm.loadImage('Images/wounded-baby.png');
+  var hurtpunisherImg = rm.loadImage('Images/hurtpunisher.png');
   
   var box;
   var world = {};
