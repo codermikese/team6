@@ -15,6 +15,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   var gunfireSound = rm.loadSound('Sounds/gunfire.mp3');
   var childHitSound = rm.loadSound('Sounds/childhit.mp3');
   var punisherHitSound = rm.loadSound('Sounds/punisherhit.mp3');
+  var childHitSound = rm.loadSound('Sounds/childhit.mp3');
   var spriteImg = rm.loadImage('images/walking.png');
   //var walkingDownImg = rm.loadImage();
   //var walkingUpImg = rm.loadImage();
@@ -318,6 +319,34 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     if(distance(nyan,yarn4) < nyan.radius + yarn4.radius)
     {
     rm.playSound(punisherHitSound);
+    }
+
+     if(distance(yarn,yarn2) < yarn.radius + yarn2.radius)
+    {
+    rm.playSound(childHitSound);
+    }
+    if(distance(yarn,yarn3) < yarn.radius + yarn3.radius)
+    {
+    rm.playSound(childHitSound);
+    }
+    if(distance(yarn,yarn4) < nyan.radius + yarn4.radius)
+    {
+    rm.playSound(punisherHitSound);
+    }
+
+
+    if(distance(yarn2,yarn3) < yarn2.radius + yarn3.radius)
+    {
+    rm.playSound(childHitSound);
+    }
+    if(distance(yarn2,yarn4) < yarn2.radius + yarn4.radius)
+    {
+    rm.playSound(childHitSound);
+    }
+
+    if(distance(yarn3,yarn4) < yarn3.radius + yarn4.radius)
+    {
+    rm.playSound(childHitSound);
     }
 	  
 	  sprite.update(millis);
