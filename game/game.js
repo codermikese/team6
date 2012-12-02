@@ -26,6 +26,10 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   var babyImg = rm.loadImage('images/babymonster.png');
   var bulletImg = rm.loadImage('images/bullet.png');
   var kidImg = rm.loadImage('images/kid-walking-right.png');
+  var hurtImg = rm.loadImage('images/wounded-baby.png');
+  var hurtImg2 = rm.loadImage('images/wounded-baby.png');
+  var hurtImg3 = rm.loadImage('images/wounded-baby.png');
+  var hurtpunisherImg = rm.loadImage('images/hurtpunisher.png');
   
   var box;
   var world = {};
@@ -42,8 +46,13 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   var sprite = new Animation().createFromTile(4,100,spriteImg,60,60);
 
   var baby = new Animation().createFromTile(4,100,babyImg,36,48);
+  var babyHurt = false;
+  var hurtpunisher = false;
+
   var baby2 = new Animation().createFromTile(4,100,babyImg,36,48);
+  var babyHurt2 = false;
   var baby3 = new Animation().createFromTile(4,100,babyImg,36,48);
+  var babyHurt3 = false;
   var kid = new Animation().createFromTile(4,100,kidImg,60,60);
 
   var bulletSpeed = 20;
@@ -107,6 +116,15 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     radius: 30 / SCALE,
     staticBody: false,
     draw: function(ctx, scale){ // we want to render the nyan cat with an image
+      if(hurtpunisher)
+      {
+        ctx.drawImage(hurtpunisherImg,
+          (this.x-this.radius) * scale,
+          (this.y-this.radius) * scale
+          )
+      }
+      else
+      {
       var cf = sprite.getCurrentFrame();
       ctx.drawImage(sprite.image, 
 					cf.imgSlotX * sprite.width, 
@@ -117,6 +135,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 					(this.y-this.radius) * scale, 
 					sprite.width, 
 					sprite.height);
+        }
     }
   });
   box.addBody(nyan);
@@ -132,6 +151,15 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     density: 0.5,  // al little lighter
     restitution: 0.8, // a little bouncier
     draw: function(ctx, scale){  //we also want to render the yarn with an image
+      if(babyHurt)
+      {
+        ctx.drawImage(hurtImg,
+          (this.x-this.radius) * scale,
+          (this.y-this.radius) * scale
+          )
+      }
+      else
+      {
       var cf = baby.getCurrentFrame();
       ctx.drawImage(baby.image, 
 					cf.imgSlotX * baby.width, 
@@ -142,6 +170,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 					(this.y-this.radius) * scale, 
 					baby.width, 
 					baby.height);
+      }
     }
   });
   box.addBody(yarn);
@@ -157,6 +186,15 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     density: 0.5,  // al little lighter
     restitution: 0.8, // a little bouncier
     draw: function(ctx, scale){  //we also want to render the yarn with an image
+      if(babyHurt2)
+      {
+        ctx.drawImage(hurtImg,
+          (this.x-this.radius) * scale,
+          (this.y-this.radius) * scale
+          )
+      }
+      else
+      {
       var cf = baby2.getCurrentFrame();
       ctx.drawImage(baby2.image, 
           cf.imgSlotX * baby2.width, 
@@ -167,6 +205,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
           (this.y-this.radius) * scale, 
           baby2.width, 
           baby2.height);
+      }
     }
   });
   box.addBody(yarn2);
@@ -182,6 +221,15 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     density: 0.5,  // al little lighter
     restitution: 0.8, // a little bouncier
     draw: function(ctx, scale){  //we also want to render the yarn with an image
+      if(babyHurt3)
+      {
+        ctx.drawImage(hurtImg,
+          (this.x-this.radius) * scale,
+          (this.y-this.radius) * scale
+          )
+      }
+      else
+      {
       var cf = baby3.getCurrentFrame();
       ctx.drawImage(baby2.image, 
           cf.imgSlotX * baby3.width, 
@@ -192,6 +240,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
           (this.y-this.radius) * scale, 
           baby3.width, 
           baby3.height);
+      }
     }
   });
   box.addBody(yarn3);
@@ -311,14 +360,35 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 	  if(distance(nyan,yarn) < nyan.radius + yarn.radius)
 	  {
 		rm.playSound(punisherHitSound);
+    babyHurt = true;
+    hurtpunisher =true;
 	  }
+    else
+    {
+      babyHurt = false;
+      hurtpunisher =false;
+    }
     if(distance(nyan,yarn2) < nyan.radius + yarn2.radius)
     {
     rm.playSound(punisherHitSound);
+    babyHurt2 = true;
+    hurtpunisher =true;
+    }
+    else
+    {
+      babyHurt2 = false;
+      hurtpunisher =false;
     }
     if(distance(nyan,yarn3) < nyan.radius + yarn3.radius)
     {
     rm.playSound(punisherHitSound);
+    babyHurt3 = true;
+    hurtpunisher =true;
+    }
+    else
+    {
+      babyHurt3 = false;
+      hurtpunisher =false;
     }
     if(distance(nyan,yarn4) < nyan.radius + yarn4.radius)
     {
@@ -352,7 +422,9 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     {
     rm.playSound(childHitSound);
     }
-	  
+
+
+	
 	  sprite.update(millis);
 	  baby.update(millis);
     baby2.update(millis);
