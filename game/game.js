@@ -24,6 +24,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   //var ShootRightImg = rm.loadImage();
   var babyImg = rm.loadImage('images/babymonster.png');
   var bulletImg = rm.loadImage('images/bullet.png');
+  var kidImg = rm.loadImage('images/kid-walking-right.png');
   
   var box;
   var world = {};
@@ -35,12 +36,14 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   var geomId = 1;
 
   //shapes in the box2 world, locations are their centers
-  var nyan, moon, pyramid, ground, ceiling, leftWall, rightWall, yarn;
+  var nyan, moon, pyramid, ground, ceiling, leftWall, rightWall, yarn, yarn2, yarn3, kid;
 
   var sprite = new Animation().createFromTile(4,100,spriteImg,60,60);
 
   var baby = new Animation().createFromTile(4,100,babyImg,36,48);
   var baby2 = new Animation().createFromTile(4,100,babyImg,36,48);
+  var baby3 = new Animation().createFromTile(4,100,babyImg,36,48);
+  var kid = new Animation().createFromTile(4,100,kidImg,60,60);
 
   var bulletSpeed = 20;
   var bullet;
@@ -167,6 +170,56 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   });
   box.addBody(yarn2);
   world[geomId] = yarn2;
+
+    geomId++;
+  yarn3 = new Circle({
+    id: geomId,
+    x: 200 / SCALE,
+    y: 190 / SCALE,
+    radius: 30 / SCALE,
+    staticBody: false,
+    density: 0.5,  // al little lighter
+    restitution: 0.8, // a little bouncier
+    draw: function(ctx, scale){  //we also want to render the yarn with an image
+      var cf = baby3.getCurrentFrame();
+      ctx.drawImage(baby2.image, 
+          cf.imgSlotX * baby3.width, 
+          cf.imgSlotY * baby3.height, 
+          baby3.width, 
+          baby3.height, 
+          (this.x-this.radius) * scale,
+          (this.y-this.radius) * scale, 
+          baby3.width, 
+          baby3.height);
+    }
+  });
+  box.addBody(yarn3);
+  world[geomId] = yarn3;
+
+  geomId++;
+  yarn4 = new Circle({
+    id: geomId,
+    x: 500 / SCALE,
+    y: 400 / SCALE,
+    radius: 30 / SCALE,
+    staticBody: false,
+    density: 0.5,  // al little lighter
+    restitution: 0.8, // a little bouncier
+    draw: function(ctx, scale){  //we also want to render the yarn with an image
+      var cf = kid.getCurrentFrame();
+      ctx.drawImage(kid.image, 
+          cf.imgSlotX * kid.width, 
+          cf.imgSlotY * kid.height, 
+          kid.width, 
+          kid.height, 
+          (this.x-this.radius) * scale,
+          (this.y-this.radius) * scale, 
+          kid.width, 
+          kid.height);
+    }
+  });
+  box.addBody(yarn4);
+  world[geomId] = yarn4;
   
   geomId++;
   bullet = new Circle({
@@ -259,6 +312,8 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 	  sprite.update(millis);
 	  baby.update(millis);
     baby2.update(millis);
+    baby3.update(millis);
+    kid.update(millis);
     },
     draw: function(context){
       context.drawImage(backImg, 0, 0, this.width, this.height);
@@ -268,6 +323,8 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
       nyan.draw(context, SCALE);
       yarn.draw(context, SCALE);
       yarn2.draw(context, SCALE);
+      yarn3.draw(context, SCALE);
+      yarn4.draw(context, SCALE);
     }
   });
 
