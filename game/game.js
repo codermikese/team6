@@ -305,9 +305,20 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 
 	  if(distance(nyan,yarn) < nyan.radius + yarn.radius)
 	  {
-		lastOw = millis;
 		rm.playSound(punisherHitSound);
 	  }
+    if(distance(nyan,yarn2) < nyan.radius + yarn2.radius)
+    {
+    rm.playSound(punisherHitSound);
+    }
+    if(distance(nyan,yarn3) < nyan.radius + yarn3.radius)
+    {
+    rm.playSound(punisherHitSound);
+    }
+    if(distance(nyan,yarn4) < nyan.radius + yarn4.radius)
+    {
+    rm.playSound(punisherHitSound);
+    }
 	  
 	  sprite.update(millis);
 	  baby.update(millis);
