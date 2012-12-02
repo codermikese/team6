@@ -325,7 +325,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     rm.playSound(punisherHitSound);
     }
 
-     if(distance(yarn,yarn2) < yarn.radius + yarn2.radius)
+    if(distance(yarn,yarn2) < yarn.radius + yarn2.radius)
     {
     rm.playSound(childHitSound);
     }
@@ -335,7 +335,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
     }
     if(distance(yarn,yarn4) < nyan.radius + yarn4.radius)
     {
-    rm.playSound(punisherHitSound);
+    rm.playSound(childHitSound);
     }
 
 
