@@ -40,6 +40,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   var sprite = new Animation().createFromTile(4,100,spriteImg,60,60);
 
   var baby = new Animation().createFromTile(4,100,babyImg,36,48);
+  var baby2 = new Animation().createFromTile(4,100,babyImg,36,48);
 
   var bulletSpeed = 20;
   var bullet;
@@ -141,6 +142,31 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
   });
   box.addBody(yarn);
   world[geomId] = yarn;
+
+    geomId++;
+  yarn2 = new Circle({
+    id: geomId,
+    x: 600 / SCALE,
+    y: 190 / SCALE,
+    radius: 30 / SCALE,
+    staticBody: false,
+    density: 0.5,  // al little lighter
+    restitution: 0.8, // a little bouncier
+    draw: function(ctx, scale){  //we also want to render the yarn with an image
+      var cf = baby2.getCurrentFrame();
+      ctx.drawImage(baby2.image, 
+          cf.imgSlotX * baby2.width, 
+          cf.imgSlotY * baby2.height, 
+          baby2.width, 
+          baby2.height, 
+          (this.x-this.radius) * scale,
+          (this.y-this.radius) * scale, 
+          baby2.width, 
+          baby2.height);
+    }
+  });
+  box.addBody(yarn2);
+  world[geomId] = yarn2;
   
   geomId++;
   bullet = new Circle({
@@ -232,6 +258,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
 	  
 	  sprite.update(millis);
 	  baby.update(millis);
+    baby2.update(millis);
     },
     draw: function(context){
       context.drawImage(backImg, 0, 0, this.width, this.height);
@@ -240,6 +267,7 @@ require(['frozen/GameCore', 'frozen/ResourceManager', 'frozen/Sprite', 'frozen/A
       //pyramid.draw(context, SCALE);
       nyan.draw(context, SCALE);
       yarn.draw(context, SCALE);
+      yarn2.draw(context, SCALE);
     }
   });
 
